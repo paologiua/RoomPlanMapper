@@ -101,9 +101,9 @@ extension RoomPlanMapper: ARSCNViewDelegate {
         let transform = planeAnchor.transform
         let geometry = planeAnchor.geometry
         
-        Task { @MainActor in
-            await self.handleAnchorUpdate(transform: transform, geometry: geometry, on: node)
-        }
+        // Task { @MainActor in
+        //     await self.handleAnchorUpdate(transform: transform, geometry: geometry, on: node)
+        // }
     }
     
     @MainActor
