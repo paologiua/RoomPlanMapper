@@ -98,7 +98,7 @@ extension RoomPlanMapper: ARSCNViewDelegate {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         
         // Creiamo una copia dei dati necessari da planeAnchor
-        let planeAnchorCopy = ARPlaneAnchor(transform: planeAnchor.transform, center: planeAnchor.center, extent: planeAnchor.extent)
+        let planeAnchorCopy = ARPlaneAnchor(transform: planeAnchor.transform)
         
         Task { @MainActor in
             await self.handleAnchorUpdate(for: planeAnchorCopy, on: node)
