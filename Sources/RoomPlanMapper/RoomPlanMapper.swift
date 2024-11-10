@@ -94,7 +94,6 @@ class RoomPlanMapper: NSObject {
 
 // ARSCNViewDelegate implementation
 extension RoomPlanMapper: ARSCNViewDelegate {
-    @MainActor
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor,
               let device = sceneView.device,  // Ottieni il dispositivo
