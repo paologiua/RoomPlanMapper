@@ -19,9 +19,8 @@ class RoomPlanMapper: NSObject {
     private var configuration: ARWorldTrackingConfiguration?
     private var currentMap: ARWorldMap?
     
-    override init(sceneView: ARSCNView) {
+    init(sceneView: ARSCNView) {
         self.sceneView = sceneView
-        super.init()
     }
     
     private func saveWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
