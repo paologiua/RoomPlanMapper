@@ -97,27 +97,28 @@ extension RoomPlanMapper: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         
-        // Creiamo una copia dei dati necessari da planeAnchor
-        let planeAnchorCopy = ARPlaneAnchor(transform: planeAnchor.transform)
+        // Copia dei valori rilevanti di planeAnchor
+        let transform = planeAnchor.transform
+        let geometry = planeAnchor.geometry
         
         Task { @MainActor in
-            await self.handleAnchorUpdate(for: planeAnchorCopy, on: node)
+            await self.handleAnchorUpdate(transform: transform, geometry: geometry, on: node)
         }
     }
     
     @MainActor
-    private func handleAnchorUpdate(for planeAnchor: ARPlaneAnchor, on node: SCNNode) async {
+    private func handleAnchorUpdate(transform: simd_float4x4, geometry: ARPlaneGeometry, on node: SCNNode) async {
         guard let device = sceneView.device,
               let planeGeometry = ARSCNPlaneGeometry(device: device) else {
             return
         }
         
         // Update the plane geometry with the anchor's geometry
-        planeGeometry.update(from: planeAnchor.geometry)
+        planeGeometry.update(from: geometry)
         
         // Create a plane node and add it to the scene
         let planeNode = SCNNode(geometry: planeGeometry)
-        planeNode.transform = SCNMatrix4(planeAnchor.transform)
+        planeNode.transform = SCNMatrix4(transform)
         node.addChildNode(planeNode)
         
         // Get the current world map
