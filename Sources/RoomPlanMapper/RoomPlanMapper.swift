@@ -95,8 +95,16 @@ class RoomPlanMapper: NSObject {
 // ARSCNViewDelegate implementation
 extension RoomPlanMapper: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard let planeAnchor = anchor as? ARPlaneAnchor,
-              let device = sceneView.device,  // Ottieni il dispositivo
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        
+        Task { @MainActor in
+            await self.handleAnchorUpdate(for: planeAnchor, on: node)
+        }
+    }
+    
+    @MainActor
+    private func handleAnchorUpdate(for planeAnchor: ARPlaneAnchor, on node: SCNNode) async {
+        guard let device = sceneView.device,
               let planeGeometry = ARSCNPlaneGeometry(device: device) else {
             return
         }
@@ -109,16 +117,16 @@ extension RoomPlanMapper: ARSCNViewDelegate {
         planeNode.transform = SCNMatrix4(planeAnchor.transform)
         node.addChildNode(planeNode)
         
-        // Get the current world map (only available with certain session configurations)
+        // Get the current world map
         sceneView.session.getCurrentWorldMap { worldMap, error in
             if let worldMap = worldMap {
-                // Save or use the world map
                 self.currentMap = worldMap
             } else if let error = error {
                 print("Error getting world map: \(error.localizedDescription)")
             }
         }
-    }}
+    }
+}
 
 // ARSessionDelegate implementation
 extension RoomPlanMapper: ARSessionDelegate {
