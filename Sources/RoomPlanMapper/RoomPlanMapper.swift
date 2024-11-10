@@ -14,7 +14,7 @@ import ARKit
 import RealityKit
 
 class RoomPlanMapper: NSObject {
-    private let sceneView
+    private let sceneView: ARSCNView
     private var session: ARSession?
     private var configuration: ARWorldTrackingConfiguration?
     private var currentMap: ARWorldMap?
