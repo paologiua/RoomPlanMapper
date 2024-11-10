@@ -36,6 +36,7 @@ class RoomPlanMapper: NSObject {
         return worldMap
     }
     
+    @MainActor
     func startScanning() {
         // Set up the ARSCNView
         sceneView.delegate = self
