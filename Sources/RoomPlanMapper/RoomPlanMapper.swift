@@ -14,10 +14,15 @@ import ARKit
 import RealityKit
 
 class RoomPlanMapper: NSObject {
-    private let sceneView?
+    private let sceneView
     private var session: ARSession?
     private var configuration: ARWorldTrackingConfiguration?
     private var currentMap: ARWorldMap?
+    
+    override init(sceneView: ARSCNView) {
+        self.sceneView = sceneView
+        super.init()
+    }
     
     private func saveWorldMap(_ worldMap: ARWorldMap, to url: URL) throws {
         let data = try NSKeyedArchiver.archivedData(withRootObject: worldMap, requiringSecureCoding: true)
@@ -32,13 +37,7 @@ class RoomPlanMapper: NSObject {
         return worldMap
     }
     
-    func setSceneView(sceneView view: ARSCNView) {
-        sceneView = view;
-    }
-    
     func startScanning() {
-        guard sceneView else {return }
-        
         // Set up the ARSCNView
         sceneView.delegate = self
         sceneView.session.delegate = self
@@ -96,8 +95,6 @@ class RoomPlanMapper: NSObject {
 // ARSCNViewDelegate implementation
 extension RoomPlanMapper: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        guard sceneView else {return }
-        
         guard let planeAnchor = anchor as? ARPlaneAnchor,
               let device = sceneView.device,  // Ottieni il dispositivo
               let planeGeometry = ARSCNPlaneGeometry(device: device) else {
